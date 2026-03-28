@@ -1,0 +1,63 @@
+# ==============================================================================
+# /etc/systemd/system/heatzy-monitor.service
+#
+# Service systemd pour le daemon Heatzy Monitor sur DietPi x86
+#
+# Installation :
+#   sudo cp heatzy-monitor.service /etc/systemd/system/
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now heatzy-monitor
+#
+# Statut :
+#   sudo systemctl status heatzy-monitor
+#   sudo journalctl -u heatzy-monitor -f
+# ==============================================================================
+
+[Unit]
+Description=Heatzy Monitor — collecte CSV des thermostats (ALTICAP)
+Documentation=https://heatzy.com/blog/heatzy-openapi-3
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=heatzy
+Group=heatzy
+
+# --- Chemin du script et arguments ---
+# Remplacez EMAIL et PASSWORD par les vraies valeurs
+# OU utilisez un fichier EnvironmentFile (voir ci-dessous)
+ExecStart=/usr/bin/python3 /opt/heatzy/heatzy_monitor.py \
+    --email "${HEATZY_EMAIL}" \
+    --password "${HEATZY_PASSWORD}" \
+    --csv /var/log/heatzy/heatzy_history.csv \
+    --interval 5
+
+# --- Credentials via fichier sécurisé (recommandé) ---
+# Créer /etc/heatzy/credentials (mode 600, propriétaire heatzy) :
+#   HEATZY_EMAIL=user@example.fr
+#   HEATZY_PASSWORD=VotreMotDePasse
+EnvironmentFile=/etc/heatzy/credentials
+
+# --- Redémarrage automatique ---
+Restart=on-failure
+RestartSec=60s
+StartLimitIntervalSec=300
+StartLimitBurst=5
+
+# --- Répertoire de travail ---
+WorkingDirectory=/opt/heatzy
+
+# --- Stdout vers journald (lisible via journalctl) ---
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=heatzy-monitor
+
+# --- Hardening minimal compatible DietPi ---
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ReadWritePaths=/var/log/heatzy
+
+[Install]
+WantedBy=multi-user.target

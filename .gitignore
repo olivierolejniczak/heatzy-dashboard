@@ -1,0 +1,30 @@
+# Generated files (created by New-HeatzyDashboard.ps1)
+Heatzy-Dashboard.html
+Heatzy-Collector.ps1
+manifest.json
+sw.js
+icon.svg
+icon-192.png
+icon-512.png
+
+# Data files
+*.csv
+*.json
+!manifest.json
+!package.json
+heatzy_session.json
+heatzy_log.json
+heatzy_collector.log
+
+# Credentials
+credentials
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# IDE
+.vscode/
+.idea/
+*.swp
