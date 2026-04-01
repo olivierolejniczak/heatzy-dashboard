@@ -2,7 +2,7 @@
 
 Self-hosted dashboard for [Heatzy Pilote Pro](https://heatzy.com/pilote-pro) smart radiator controllers. Real-time monitoring, scheduling, and control — all from a single HTML file.
 
-![Dashboard screenshot](docs/screenshot.png)
+![Dashboard screenshot](screenshot.png)
 
 ## Features
 
